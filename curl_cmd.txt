@@ -1,0 +1,30 @@
+
+[qna]
+curl -X POST "https://ental-office-virtual-assistant-qnakb.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=dental-office-virtual-assistant-qnakb&api-version=2021-10-01&deploymentName=production" -H "Ocp-Apim-Subscription-Key: 4ee93b50c48240c992f6e01ad6efa9de" -H "Content-Type: application/json" -d "{\"top\":3,\"question\":\"Can you treat my child?\",\"includeUnstructuredSources\":true,\"confidenceScoreThreshold\":\"0.5\",\"answerSpanRequest\":{\"enable\":true,\"topAnswersWithSpan\":1,\"confidenceScoreThreshold\":\"0.5\"}}"
+
+{
+  "answers": [
+    {
+      "questions": [
+        "Can you treat my child?",
+        "What is the youngest patient you accept?",
+        "Can I bring my 6 year old?",
+        "Do you treat children?"
+      ],
+      "answer": "We treat patients ages 6+. Patients under 18 must be accompanied by a parent or legal guardian.",
+      "confidenceScore": 1.0,
+      "id": 1,
+      "source": "FAQ.tsv",
+      "metadata": {},
+      "dialog": {
+        "isContextOnly": false,
+        "prompts": []
+      }
+    }
+  ]
+}
+
+[intentrecog]
+curl -X POST "https://ental-office-virtual-assistant-qnakb.cognitiveservices.azure.com/language/:analyze-conversations?api-version=2022-10-01-preview" -H "Ocp-Apim-Subscription-Key: 4ee93b50c48240c992f6e01ad6efa9de"  -H "Apim-Request-Id: 4ffcac1c-b2fc-48ba-bd6d-b69d9942995a" -H "Content-Type: application/json" -d "{\"kind\":\"Conversation\",\"analysisInput\":{\"conversationItem\":{\"id\":\"1\",\"text\":\"I want to set up a meeting with the dentist for November 18th at 2:15 PM. How can I do that?\",\"modality\":\"text\",\"language\":\"en-us\",\"participantId\":\"1\"}},\"parameters\":{\"projectName\":\"dental-office-virtual-assistant-clu\",\"verbose\":true,\"deploymentName\":\"dental-office-virtual-assistant-clu\",\"stringIndexType\":\"TextElement_V8\"}}"
+
+{"kind":"ConversationResult","result":{"query":"I want to set up a meeting with the dentist for November 18th at 2:15 PM. How can I do that?","prediction":{"topIntent":"scheduleAppointment","projectKind":"Conversation","intents":[{"category":"scheduleAppointment","confidenceScore":1},{"category":"getAvailability","confidenceScore":0.8792249},{"category":"None","confidenceScore":0}],"entities":[{"category":"Date","text":"November 18th","offset":48,"length":13,"confidenceScore":1},{"category":"Time","text":"2:15 PM","offset":65,"length":7,"confidenceScore":1}]}}}

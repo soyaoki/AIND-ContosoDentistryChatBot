@@ -57,15 +57,22 @@ adapter.onTurnError = onTurnErrorHandler;
 
 // Map configuration values values from .env file into the required format for each service.
 const QnAConfiguration = {
-    knowledgeBaseId: process.env.QnAKnowledgebaseId,
+    // knowledgeBaseId: process.env.QnAKnowledgebaseId,
     endpointKey: process.env.QnAAuthKey,
-    host: process.env.QnAEndpointHostName
+    host: process.env.QnAEndpointHostName,
 };
 
-const LuisConfiguration = {
-    applicationId: process.env.LuisAppId,
-    endpointKey: process.env.LuisAPIKey,
-    endpoint: process.env.LuisAPIHostName,
+// const LuisConfiguration = {
+//     applicationId: process.env.LuisAppId,
+//     endpointKey: process.env.LuisAPIKey,
+//     endpoint: process.env.LuisAPIHostName,
+// }
+
+const CLUConfiguration = {
+    CLUEndpoint: process.env.CLUEndpoint,
+    CLUKey: process.env.CLUKey,
+    CLUProjectName: process.env.CLUProjectName,
+    CLUDeploymentName: process.env.CLUDeploymentName,
 }
 
 const SchedulerConfiguration = {
@@ -74,7 +81,8 @@ const SchedulerConfiguration = {
 //pack each service configuration into 
 const configuration = {
     QnAConfiguration,
-    LuisConfiguration,
+    // LuisConfiguration,
+    CLUConfiguration, 
     SchedulerConfiguration
 }
 
@@ -82,12 +90,17 @@ const configuration = {
 const myBot = new DentaBot(configuration, {});
 
 // Listen for incoming requests.
-server.post('/api/messages', (req, res) => {
-    adapter.processActivity(req, res, async (context) => {
-        // Route to main dialog.
-        await myBot.run(context);
-    });
+server.post('/api/messages', async (req, res) => {
+    try {
+        await adapter.processActivity(req, res, async (context) => {
+            // Route to main dialog.
+            await myBot.run(context);
+        });
+    } catch (error) {
+        console.error('Error processing activity:', error);
+    }
 });
+
 
 // Listen for Upgrade requests for Streaming.
 server.on('upgrade', (req, socket, head) => {

@@ -1,16 +1,22 @@
-const {LuisRecognizer} = require('botbuilder-ai')
+// https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/cognitivelanguage/ai-language-conversations/samples/v1-beta/javascript/analyzeConversationApp.js
+// https://knowledge.udacity.com/questions/988296
+
+
+const { ConversationAnalysisClient } = require("@azure/ai-language-conversations");
+const { AzureKeyCredential } = require("@azure/core-auth");
 
 class IntentRecognizer {
     constructor(config) {
-        const luisIsConfigured = config && config.applicationId && config.endpointKey && config.endpoint;
-        if (luisIsConfigured) {
-            // Set the recognizer options depending on which endpoint version you want to use e.g v2 or v3.
-            // More details can be found in https://docs.microsoft.com/en-gb/azure/cognitive-services/luis/luis-migration-api-v3
-            const recognizerOptions = {
-                apiVersion: 'v3'
-            };
+        const CLUIsConfigured = config && config.CLUEndpoint && config.CLUKey && config.CLUProjectName && config.CLUDeploymentName;
 
-            this.recognizer = new LuisRecognizer(config, recognizerOptions);
+        if (CLUIsConfigured) {
+          this.recognizer = new ConversationAnalysisClient(config.CLUEndpoint, new AzureKeyCredential(config.CLUKey),{apiVersion: '2022-10-01-preview'});
+          this.CLUProjectName = config.CLUProjectName;
+          this.CLUDeploymentName = config.CLUDeploymentName;
+          console.error('\n ******************************************** \n');
+          console.error(this.recognizer);
+          console.error(new AzureKeyCredential(config.CLUKey));
+          console.error('\n ******************************************** \n');
         }
     }
 
@@ -19,24 +25,45 @@ class IntentRecognizer {
     }
 
     /**
-     * Returns an object with preformatted LUIS results for the bot's dialogs to consume.
+     * Returns an object with preformatted CLU results for the bot's dialogs to consume.
      * @param {TurnContext} context
      */
-    async executeLuisQuery(context) {
-        return await this.recognizer.recognize(context);
+    async executeCLUQuery(context) {
+
+      const body = {
+          kind: "Conversation",
+          analysisInput: {
+            conversationItem: {
+              id: "1",
+              participantId: "1",
+              text: context.activity.text,
+              modality: "text",
+              language: "en-us",
+            },
+          },
+          parameters: {
+            projectName: this.CLUProjectName,
+            deploymentName: this.CLUDeploymentName,
+            verbose: true,
+            stringIndexType: "TextElement_V8",
+          },
+        };
+
+      return await this.recognizer.analyzeConversation(body);
     }
 
- 
+    getDateEntity(result) {
+        const entities = result.predictions.entities;
+        console.log("entities: ", entities);
+        return undefined;
+    }
+    
     getTimeEntity(result) {
-        const datetimeEntity = result.entities.datetime;
-        if (!datetimeEntity || !datetimeEntity[0]) return undefined;
-
-        const timex = datetimeEntity[0].timex;
-        if (!timex || !timex[0]) return undefined;
-
-        const datetime = timex[0]
-        return datetime;
+        const entities = result.predictions.entities;
+        console.log("entities: ", entities);
+        return undefined;
     }
+    
 }
 
 module.exports = IntentRecognizer
