@@ -1,0 +1,56 @@
+[
+    {
+        "intent": "getAvailability",
+        "language": "en-us",
+        "text": "Can you check if there are any open slots for a dentist appointment?",
+        "entities": []
+    },
+    {
+        "intent": "getAvailability",
+        "language": "en-us",
+        "text": "I'm interested in scheduling a dental checkup. What times are available?",
+        "entities": []
+    },
+    {
+        "intent": "getAvailability",
+        "language": "en-us",
+        "text": "Tell me when I can book an appointment with the dentist.",
+        "entities": []
+    },
+    {
+        "intent": "scheduleAppointment",
+        "language": "en-us",
+        "text": "I'd like to schedule a dentist appointment for April 10th at 3:30 PM.",
+        "entities": [
+            {
+                "category": "Date-Time",
+                "offset": 47,
+                "length": 21
+            }
+        ]
+    },
+    {
+        "intent": "scheduleAppointment",
+        "language": "en-us",
+        "text": "Can you help me book a dental appointment on August 3rd at 11:00 AM?",
+        "entities": [
+            {
+                "category": "Date-Time",
+                "offset": 45,
+                "length": 22
+            }
+        ]
+    },
+    {
+        "intent": "scheduleAppointment",
+        "language": "en-us",
+        "text": "I want to set up a meeting with the dentist for November 18th at 2:15 PM. How can I do that?",
+        "entities": [
+            {
+                "category": "Date-Time",
+                "offset": 48,
+                "length": 24
+            }
+        ]
+    }
+]

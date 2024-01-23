@@ -1,22 +1,13 @@
-// https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/cognitivelanguage/ai-language-conversations/samples/v1-beta/javascript/analyzeConversationApp.js
-// https://knowledge.udacity.com/questions/988296
-
-
-const { ConversationAnalysisClient } = require("@azure/ai-language-conversations");
-const { AzureKeyCredential } = require("@azure/core-auth");
+const { ConversationAnalysisClient } = require ("@azure/ai-language-conversations");
+const { AzureKeyCredential } = require ("@azure/core-auth");
 
 class IntentRecognizer {
     constructor(config) {
-        const CLUIsConfigured = config && config.CLUEndpoint && config.CLUKey && config.CLUProjectName && config.CLUDeploymentName;
-
-        if (CLUIsConfigured) {
-          this.recognizer = new ConversationAnalysisClient(config.CLUEndpoint, new AzureKeyCredential(config.CLUKey),{apiVersion: '2022-10-01-preview'});
-          this.CLUProjectName = config.CLUProjectName;
-          this.CLUDeploymentName = config.CLUDeploymentName;
-          console.error('\n ******************************************** \n');
-          console.error(this.recognizer);
-          console.error(new AzureKeyCredential(config.CLUKey));
-          console.error('\n ******************************************** \n');
+        const cluIsConfigured = config && config.projectName && config.endpointKey && config.endpoint && config.deploymentName;
+        if(cluIsConfigured) {
+            this.recognizer = new ConversationAnalysisClient(config.endpoint, new AzureKeyCredential(config.endpointKey));
+            this.projectName = config.projectName;
+            this.deploymentName = config.deploymentName;
         }
     }
 
@@ -25,45 +16,28 @@ class IntentRecognizer {
     }
 
     /**
-     * Returns an object with preformatted CLU results for the bot's dialogs to consume.
+     * Returns an object with preformatted LUIS results for the bot's dialogs to consume.
      * @param {TurnContext} context
      */
-    async executeCLUQuery(context) {
-
-      const body = {
-          kind: "Conversation",
-          analysisInput: {
-            conversationItem: {
-              id: "1",
-              participantId: "1",
-              text: context.activity.text,
-              modality: "text",
-              language: "en-us",
+    async executeCluQuery(context) {
+        const body = {
+            kind: "Conversation",
+            analysisInput: {
+                conversationItem: {
+                    id: "1",
+                    participantId: "1",
+                    modality: "text",
+                    language: "en",
+                    text: context.activity.text,
+                },
             },
-          },
-          parameters: {
-            projectName: this.CLUProjectName,
-            deploymentName: this.CLUDeploymentName,
-            verbose: true,
-            stringIndexType: "TextElement_V8",
-          },
+            parameters: {
+                projectName: this.projectName,
+                deploymentName: this.deploymentName,
+            },
         };
-
-      return await this.recognizer.analyzeConversation(body);
+        return await  this.recognizer.analyzeConversation(body);
     }
-
-    getDateEntity(result) {
-        const entities = result.predictions.entities;
-        console.log("entities: ", entities);
-        return undefined;
-    }
-    
-    getTimeEntity(result) {
-        const entities = result.predictions.entities;
-        console.log("entities: ", entities);
-        return undefined;
-    }
-    
 }
 
 module.exports = IntentRecognizer

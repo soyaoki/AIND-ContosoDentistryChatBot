@@ -1,7 +1,13 @@
 
 [qna]
-curl -X POST "https://ental-office-virtual-assistant-qnakb.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=dental-office-virtual-assistant-qnakb&api-version=2021-10-01&deploymentName=production" -H "Ocp-Apim-Subscription-Key: 4ee93b50c48240c992f6e01ad6efa9de" -H "Content-Type: application/json" -d "{\"top\":3,\"question\":\"Can you treat my child?\",\"includeUnstructuredSources\":true,\"confidenceScoreThreshold\":\"0.5\",\"answerSpanRequest\":{\"enable\":true,\"topAnswersWithSpan\":1,\"confidenceScoreThreshold\":\"0.5\"}}"
 
+Can you treat my child?
+
+Are you accepting new patients?
+
+What if I don't have insurance?
+
+curl -X POST "https://dental-office-virtual-assistant-language-resource.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=dental-office-virtual-assistant-qna&api-version=2021-10-01&deploymentName=production" -H "Ocp-Apim-Subscription-Key: dcbbc3d4793b4f84bbce3715a5bcf742" -H "Content-Type: application/json" -d "{\"top\":3,\"question\":\"Can you treat my child?\",\"includeUnstructuredSources\":true,\"confidenceScoreThreshold\":\"0.5\",\"answerSpanRequest\":{\"enable\":true,\"topAnswersWithSpan\":1,\"confidenceScoreThreshold\":\"0.5\"}}"
 {
   "answers": [
     {
@@ -25,6 +31,14 @@ curl -X POST "https://ental-office-virtual-assistant-qnakb.cognitiveservices.azu
 }
 
 [intentrecog]
-curl -X POST "https://ental-office-virtual-assistant-qnakb.cognitiveservices.azure.com/language/:analyze-conversations?api-version=2022-10-01-preview" -H "Ocp-Apim-Subscription-Key: 4ee93b50c48240c992f6e01ad6efa9de"  -H "Apim-Request-Id: 4ffcac1c-b2fc-48ba-bd6d-b69d9942995a" -H "Content-Type: application/json" -d "{\"kind\":\"Conversation\",\"analysisInput\":{\"conversationItem\":{\"id\":\"1\",\"text\":\"I want to set up a meeting with the dentist for November 18th at 2:15 PM. How can I do that?\",\"modality\":\"text\",\"language\":\"en-us\",\"participantId\":\"1\"}},\"parameters\":{\"projectName\":\"dental-office-virtual-assistant-clu\",\"verbose\":true,\"deploymentName\":\"dental-office-virtual-assistant-clu\",\"stringIndexType\":\"TextElement_V8\"}}"
 
-{"kind":"ConversationResult","result":{"query":"I want to set up a meeting with the dentist for November 18th at 2:15 PM. How can I do that?","prediction":{"topIntent":"scheduleAppointment","projectKind":"Conversation","intents":[{"category":"scheduleAppointment","confidenceScore":1},{"category":"getAvailability","confidenceScore":0.8792249},{"category":"None","confidenceScore":0}],"entities":[{"category":"Date","text":"November 18th","offset":48,"length":13,"confidenceScore":1},{"category":"Time","text":"2:15 PM","offset":65,"length":7,"confidenceScore":1}]}}}
+Can you check if there are any open slots for a dentist appointment?
+
+I want to set up a meeting with the dentist for November 18th at 2:15 PM. How can I do that?
+
+curl -X POST "https://dental-office-virtual-assistant-language-resource.cognitiveservices.azure.com/language/:analyze-conversations?api-version=2022-10-01-preview" -H "Ocp-Apim-Subscription-Key: dcbbc3d4793b4f84bbce3715a5bcf742"  -H "Apim-Request-Id: 4ffcac1c-b2fc-48ba-bd6d-b69d9942995a" -H "Content-Type: application/json" -d "{\"kind\":\"Conversation\",\"analysisInput\":{\"conversationItem\":{\"id\":\"1\",\"text\":\"I want to set up a meeting with the dentist for November 18th at 2:15 PM. How can I do that?\",\"modality\":\"text\",\"language\":\"en-us\",\"participantId\":\"1\"}},\"parameters\":{\"projectName\":\"dental-office-virtual-assistant-clu\",\"verbose\":true,\"deploymentName\":\"dental-office-virtual-assistant-clu\",\"stringIndexType\":\"TextElement_V8\"}}"
+
+
+{"kind":"ConversationResult","result":{"query":"I want to set up a meeting with the dentist for November 18th at 2:15 PM. How can I do that?","prediction":{"topIntent":"scheduleAppointment","projectKind":"Conversation","intents":[{"category":"scheduleAppointment","confidenceScore":1},{"category":"getAvailability","confidenceScore":0.87549037},{"category":"None","confidenceScore":0}],"entities":[{"category":"Date","text":"November 18th","offset":48,"length":13,"confidenceScore":1},{"category":"Time","text":"2:15 PM","offset":65,"length":7,"confidenceScore":1}]}}}
+
+
