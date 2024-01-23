@@ -4,7 +4,6 @@
 const { ActivityHandler, MessageFactory } = require('botbuilder');
 const {CustomQuestionAnswering} = require('botbuilder-ai');
 const IntentRecognizer = require("./intentrecognizer");
-const { TextAnalyticsClient, AzureKeyCredential } = require("@azure/ai-text-analytics");
 
 const DentistScheduler = require('./dentistscheduler');
 
