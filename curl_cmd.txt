@@ -42,3 +42,9 @@ curl -X POST "https://dental-office-virtual-assistant-language-resource.cognitiv
 {"kind":"ConversationResult","result":{"query":"I want to set up a meeting with the dentist for November 18th at 2:15 PM. How can I do that?","prediction":{"topIntent":"scheduleAppointment","projectKind":"Conversation","intents":[{"category":"scheduleAppointment","confidenceScore":1},{"category":"getAvailability","confidenceScore":0.87549037},{"category":"None","confidenceScore":0}],"entities":[{"category":"Date","text":"November 18th","offset":48,"length":13,"confidenceScore":1},{"category":"Time","text":"2:15 PM","offset":65,"length":7,"confidenceScore":1}]}}}
 
 
+
+curl -k -X POST https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token -d "grant_type=client_credentials&client_id=61d59ce8-36bc-435e-98ae-0e3cb6c6632d&client_secret=MGN8Q~JkkU5CiZaBy4PuVMUcKla5M-sIiGqqpaGH&scope=https%3A%2F%2Fapi.botframework.com%2F.default"
+
+
+
+curl -X POST -H "Content-Type: application/json" -d '{"message": "Hello, Bot!"}' https://dental-office-virtual-assistant-bot.azurewebsites.net/api/messages

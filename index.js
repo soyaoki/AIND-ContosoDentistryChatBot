@@ -12,29 +12,25 @@ const restify = require('restify');
 
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
-const {
-    CloudAdapter,
-    ConfigurationBotFrameworkAuthentication
-} = require('botbuilder');
+const { BotFrameworkAdapter } = require('botbuilder');
 
 // This bot's main dialog.
 const { DentaBot } = require('./bot');
 
 // Create HTTP server
 const server = restify.createServer();
-server.use(restify.plugins.bodyParser());
-
 server.listen(process.env.port || process.env.PORT || 3978, () => {
     console.log(`\n${ server.name } listening to ${ server.url }`);
     console.log('\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator');
     console.log('\nTo talk to your bot, open the emulator select "Open Bot"');
 });
 
-const botFrameworkAuthentication = new ConfigurationBotFrameworkAuthentication(process.env);
-
 // Create adapter.
 // See https://aka.ms/about-bot-adapter to learn more about how bots work.
-const adapter = new CloudAdapter(botFrameworkAuthentication);
+const adapter = new BotFrameworkAdapter({
+    appId: process.env.MicrosoftAppId,
+    appPassword: process.env.MicrosoftAppPassword
+});
 
 // Catch-all for errors.
 const onTurnErrorHandler = async (context, error) => {
@@ -88,16 +84,29 @@ const myBot = new DentaBot(configuration, {});
 
 // Listen for incoming requests.
 server.post('/api/messages', async (req, res) => {
-    // Route received a request to adapter for processing
-    await adapter.process(req, res, (context) => myBot.run(context));
+    try {
+        await adapter.processActivity(req, res, async (context) => {
+            // Route to main dialog.
+            await myBot.run(context);
+        });
+    } catch (error) {
+        console.error('Error processing activity:', error);
+    }
 });
 
 // Listen for Upgrade requests for Streaming.
-server.on('upgrade', async (req, socket, head) => {
+server.on('upgrade', (req, socket, head) => {
     // Create an adapter scoped to this WebSocket connection to allow storing session data.
-    const streamingAdapter = new CloudAdapter(botFrameworkAuthentication);
-    // Set onTurnError for the CloudAdapter created for each connection.
+    const streamingAdapter = new BotFrameworkAdapter({
+        appId: process.env.MicrosoftAppId,
+        appPassword: process.env.MicrosoftAppPassword
+    });
+    // Set onTurnError for the BotFrameworkAdapter created for each connection.
     streamingAdapter.onTurnError = onTurnErrorHandler;
 
-    await streamingAdapter.process(req, socket, head, (context) => myBot.run(context));
+    streamingAdapter.useWebSocket(req, socket, head, async (context) => {
+        // After connecting via WebSocket, run this logic for every request sent over
+        // the WebSocket connection.
+        await myBot.run(context);
+    });
 });
